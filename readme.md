@@ -1,3 +1,9 @@
+# ℹ️ Informações
+
+Este projeto foi desenvolvido por **Julio Cesar de Araújo Santos** e **Ramon Bomfim** como parte da disciplina **Engenharia de Dados I**, da pós-graduação em Inteligência Artificial e Ciência de Dados.
+
+---
+
 # 🚀 Pipeline de Dados com Airflow, Postgres, DBT e Jupyter
 
 Este projeto configura uma pipeline de dados local usando Docker Compose, incluindo:
