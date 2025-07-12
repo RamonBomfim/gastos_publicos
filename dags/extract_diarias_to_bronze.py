@@ -3,7 +3,7 @@ from airflow.operators.python import PythonOperator # type: ignore
 from datetime import datetime, timedelta
 import pandas as pd
 import requests
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from sqlalchemy.schema import CreateSchema
 
 DEFAULT_ARGS = {
@@ -43,10 +43,12 @@ def extrair_resumo(**kwargs):
             break
 
     df = pd.DataFrame(todos_dados)
-    engine = create_engine("postgresql+psycopg2://airflow:airflow@localhost:5432/airflow")
+    engine = create_engine("postgresql+psycopg2://airflow:airflow@postgres:5432/airflow")
 
     with engine.connect() as conn:
-        conn.execute(CreateSchema("gold", if_not_exists=True))
+        conn.execute(text("CREATE SCHEMA IF NOT EXISTS gold"))
+        conn.execute(text("CREATE SCHEMA IF NOT EXISTS bronze"))
+
 
     df.to_sql("diarias_resumo", con=engine, schema="bronze", if_exists=mode, index=False)
     print(f"{len(df)} registros inseridos em bronze.diarias_resumo")
@@ -56,7 +58,7 @@ def extrair_favorecidos(**kwargs):
     data_fim = kwargs['data_final']
     mode = kwargs['mode']
 
-    engine = create_engine("postgresql+psycopg2://airflow:airflow@localhost:5432/airflow")
+    engine = create_engine("postgresql+psycopg2://airflow:airflow@postgres:5432/airflow")
     ugs_df = pd.read_sql("SELECT DISTINCT ug FROM bronze.diarias_resumo", con=engine)
     limit = 100
     todos_dados = []
@@ -86,7 +88,7 @@ def extrair_favorecidos(**kwargs):
 
     df = pd.DataFrame(todos_dados)
     with engine.connect() as conn:
-        conn.execute(CreateSchema("bronze", if_not_exists=True))
+        conn.execute(text("CREATE SCHEMA IF NOT EXISTS bronze"))
 
     df.to_sql("diarias_favorecidos", con=engine, schema="bronze", if_exists=mode, index=False)
     print(f"{len(df)} registros inseridos em bronze.diarias_favorecidos")
