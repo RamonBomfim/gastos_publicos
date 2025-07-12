@@ -2,11 +2,12 @@
     alias='stg_diarias_resumo',
     materialized='table',
     unique_key='ug',
+    schema='silver'
 )}}
 
 with base as (
     select *
-    from bronze.diarias_resumo
+    from gastos_publicos_bronze.diarias_resumo
 ),
 
 formatado as (

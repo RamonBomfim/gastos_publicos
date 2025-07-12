@@ -2,11 +2,12 @@
     alias='stg_diarias_favorecidos',
     materialized='table',
     unique_key='codigo_favorecido',
+    schema='silver'
 )}}
 
 with base as (
     select *
-    from bronze.diarias_favorecidos
+    from gastos_publicos_bronze.diarias_favorecidos
 ),
 
 formatado as (

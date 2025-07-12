@@ -22,6 +22,9 @@ docker-compose run --rm airflow-init
 echo "📡 Subindo webserver, scheduler, dbt, jupyter e metabase..."
 docker-compose up -d airflow-webserver airflow-scheduler dbt jupyter metabase
 
+echo "⏳ Aguardando os serviços serem disponibilizados..."
+sleep 30
+
 echo
 echo "✅ Tudo pronto!"
 echo "- Airflow: http://localhost:8080"
