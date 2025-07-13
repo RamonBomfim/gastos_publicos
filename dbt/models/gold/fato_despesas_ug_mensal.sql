@@ -1,6 +1,7 @@
 {{ config(
     materialized='table',
-    unique_key='ug'
+    unique_key='ug',
+    schema='gold'
 )}}
 
 with base as (
@@ -12,9 +13,9 @@ agrupado as (
         ug,
         descricao_ug,
         date_trunc('month', data_inicial) as mes,
-        sum(total_empenhado) as total_empenhado,
-        sum(total_liquidado) as total_liquidado,
-        sum(total_pago) as total_pago
+        sum(total_empenhado::numeric) as total_empenhado,
+        sum(total_liquidado::numeric) as total_liquidado,
+        sum(total_pago::numeric) as total_pago
     from base
     group by 1, 2, 3
 )
